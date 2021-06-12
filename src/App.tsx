@@ -31,7 +31,7 @@ const App = () => {
           InputLabelProps={{ shrink: true }}
           label="New task ?"
           value={input}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
         />
       </FormControl>
       <button disabled={!input} onClick={newTask}>
