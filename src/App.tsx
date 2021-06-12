@@ -1,11 +1,12 @@
-import { VFC, useState, useEffect } from 'react';
-import { FormControl, TextField } from '@material-ui/core';
+import { useState, useEffect } from 'react';
+import { FormControl, TextField, List } from '@material-ui/core';
 import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 
 import { db } from './firebase';
+import TaskItem from './TaskItem';
 import './App.css';
 
-const App: VFC = () => {
+const App = () => {
   const [tasks, setTasks] = useState([{ id: '', title: '' }]);
   const [input, setInput] = useState('');
   useEffect(() => {
@@ -37,9 +38,11 @@ const App: VFC = () => {
         <AddToPhotosIcon />
       </button>
 
-      {tasks.map((task) =>
-        <h3 key={task.id}>{task.title}</h3>
-      )}
+      <List>
+        {tasks.map((task) => (
+          <TaskItem key={task.id} id={task.id} title={task.title} />
+        ))}
+      </List>
     </div>
   );
 };
