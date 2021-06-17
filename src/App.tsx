@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { FormControl, TextField, List } from '@material-ui/core';
 import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { makeStyles } from '@material-ui/styles';
 
-import { db } from './firebase';
+import { db, auth } from './firebase';
 import TaskItem from './TaskItem';
 import './App.css';
 
@@ -18,10 +19,22 @@ const useStyles = makeStyles({
   },
 });
 
-const App = () => {
+type Props = {
+  history: any;
+};
+
+const App = ({ history }: Props) => {
   const [tasks, setTasks] = useState([{ id: '', title: '' }]);
   const [input, setInput] = useState('');
   const classes = useStyles();
+
+  useEffect(() => {
+    const unSub = auth.onAuthStateChanged((user) => {
+      !user && history.push('login');
+    });
+    return () => unSub();
+  });
+
   useEffect(() => {
     const unSub = db.collection('tasks').onSnapshot((snapshot) => {
       setTasks(
@@ -39,6 +52,19 @@ const App = () => {
   return (
     <div className="app">
       <h1>Todo App by React/Firebase</h1>
+      <button
+        className="app__logout"
+        onClick={async () => {
+          try {
+            await auth.signOut();
+            history.push('login');
+          } catch (error) {
+            alert(error.message);
+          }
+        }}
+      >
+        <ExitToAppIcon />
+      </button>
       <br />
       <FormControl>
         <TextField

@@ -14,9 +14,10 @@ const Login= ({ history }: Props) => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
+    const unSub = auth.onAuthStateChanged((user) => {
       user && history.push('/');
     });
+    return () => unSub();
   }, [history]);
 
   return (
